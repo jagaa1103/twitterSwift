@@ -7,12 +7,12 @@
 //
 
 import UIKit
+import Social
 
 class ViewController: UIViewController {
 
     @IBOutlet weak var tweetText: UITextView!
-    @IBAction func showShareAction(sender: AnyObject) {
-    }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +24,15 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    @IBAction func showShareAction(sender: AnyObject) {
+        if(self.tweetText .isFirstResponder()){
+            self.tweetText.resignFirstResponder()
+        }
+        let actionController: UIAlertController = UIAlertController(title: "Test", message: "Tweet Note", preferredStyle: UIAlertControllerStyle.Alert)
+        self.presentViewController(actionController, animated: true, completion: nil)
+        
+        
+    }
 
 }
 
