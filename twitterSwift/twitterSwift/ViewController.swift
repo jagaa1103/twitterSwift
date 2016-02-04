@@ -29,6 +29,21 @@ class ViewController: UIViewController {
             self.tweetText.resignFirstResponder()
         }
         let actionController: UIAlertController = UIAlertController(title: "Test", message: "Tweet Note", preferredStyle: UIAlertControllerStyle.Alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil)
+        let sendAction = UIAlertAction(title: "Send", style: UIAlertActionStyle.Default, handler: {
+            Void in
+            print("Send Clicked")
+            if(SLComposeViewController.isAvailableForServiceType(SLServiceTypeTwitter)){
+                print("signed in Twitter!!")
+            }else{
+                let alert = UIAlertController(title: "Alert", message: "Please sign in twitter", preferredStyle: UIAlertControllerStyle.Alert)
+                let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel, handler: nil)
+                alert.addAction(okAction)
+                self.presentViewController(alert, animated: true, completion: nil)
+            }
+        })
+        actionController.addAction(cancelAction)
+        actionController.addAction(sendAction)
         self.presentViewController(actionController, animated: true, completion: nil)
         
         
