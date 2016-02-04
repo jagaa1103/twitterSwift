@@ -34,9 +34,12 @@ class ViewController: UIViewController, UITextViewDelegate {
                 let tweetComposer = SLComposeViewController(forServiceType: SLServiceTypeTwitter)
                 if(self.tweetText.text.characters.count < 144){
                     tweetComposer.setInitialText(self.tweetText.text)
-                    self.presentViewController(tweetComposer, animated: true, completion: nil)
+                    self.presentViewController(tweetComposer, animated: true, completion: {
+                        Void in
+                        self.tweetText.text = ""
+                    })
                 }else{
-                    let alert = UIAlertController(title: "Alert", message: "Your text is so long. Please type only 144 characters.", preferredStyle: UIAlertControllerStyle.Alert)
+                    let alert = UIAlertController(title: "Alert", message: "Your text is so long. Please type only 140 characters.", preferredStyle: UIAlertControllerStyle.Alert)
                     let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel, handler: nil)
                     alert.addAction(okAction)
                     self.presentViewController(alert, animated: true, completion: nil)
@@ -51,7 +54,7 @@ class ViewController: UIViewController, UITextViewDelegate {
     }
     
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-        if (textView.text.characters.count > 144) {
+        if (textView.text.characters.count > 140) {
             textView.deleteBackward()
         }
         return true
