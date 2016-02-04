@@ -9,7 +9,7 @@
 import UIKit
 import Social
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextViewDelegate {
 
     @IBOutlet weak var tweetText: UITextView!
 
@@ -17,6 +17,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        tweetText.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -28,25 +29,32 @@ class ViewController: UIViewController {
         if(self.tweetText .isFirstResponder()){
             self.tweetText.resignFirstResponder()
         }
-        let actionController: UIAlertController = UIAlertController(title: "Test", message: "Tweet Note", preferredStyle: UIAlertControllerStyle.Alert)
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil)
-        let sendAction = UIAlertAction(title: "Send", style: UIAlertActionStyle.Default, handler: {
-            Void in
-            print("Send Clicked")
             if(SLComposeViewController.isAvailableForServiceType(SLServiceTypeTwitter)){
                 print("signed in Twitter!!")
+                let tweetComposer = SLComposeViewController(forServiceType: SLServiceTypeTwitter)
+                if(self.tweetText.text.characters.count < 144){
+                    tweetComposer.setInitialText(self.tweetText.text)
+                    self.presentViewController(tweetComposer, animated: true, completion: nil)
+                }else{
+                    let alert = UIAlertController(title: "Alert", message: "Your text is so long. Please type only 144 characters.", preferredStyle: UIAlertControllerStyle.Alert)
+                    let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel, handler: nil)
+                    alert.addAction(okAction)
+                    self.presentViewController(alert, animated: true, completion: nil)
+                }
             }else{
                 let alert = UIAlertController(title: "Alert", message: "Please sign in twitter", preferredStyle: UIAlertControllerStyle.Alert)
                 let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel, handler: nil)
                 alert.addAction(okAction)
                 self.presentViewController(alert, animated: true, completion: nil)
             }
-        })
-        actionController.addAction(cancelAction)
-        actionController.addAction(sendAction)
-        self.presentViewController(actionController, animated: true, completion: nil)
         
-        
+    }
+    
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        if (textView.text.characters.count > 144) {
+            textView.deleteBackward()
+        }
+        return true
     }
 
 }
